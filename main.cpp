@@ -13,7 +13,6 @@ using std::cin;
     #define debugOutput(x)
 #endif
 
-
 enum Prediction
 {
     LOSE,
