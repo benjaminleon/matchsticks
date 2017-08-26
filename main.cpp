@@ -5,10 +5,11 @@ using std::cout;
 using std::endl;
 using std::cin;
 
-#define DEBUG 0
+#define DEBUG 1
 
+int depth = 0; // For string formatting of debug printouts
 #if DEBUG == 1
-    #define debugOutput(x) cout << x
+    #define debugOutput(x) cout << std::string(depth * 10, ' ') << x
 #else
     #define debugOutput(x)
 #endif
@@ -19,7 +20,6 @@ enum Prediction
     WIN
 };
 
-int depth = 0; // For string formatting of debug printouts
 
 enum Prediction findWinningMove(std::vector<int> state, int & sticks, int & pile);
 bool losingState(std::vector<int> myState);
@@ -36,9 +36,9 @@ myState.push_back(0);
 myState.push_back(0);
 int number = -1;
 
-cout << "Enter amount of sticks in the first  pile: "; cin >> myState[0];
+cout << "Enter amount of sticks in the first pile: ";  cin >> myState[0];
 cout << "Enter amount of sticks in the second pile: "; cin >> myState[1];
-cout << "Enter amount of sticks in the third  pile: "; cin >> myState[2];
+cout << "Enter amount of sticks in the third pile: ";  cin >> myState[2];
 
 int sticks = 0;
 int pile = -1;
@@ -58,12 +58,12 @@ else
 
 enum Prediction findWinningMove(std::vector<int> myState, int & sticks, int & pile)
 {
-    debugOutput(std::string(depth, ' ') << "let's examine " << myState[0] << " " <<
+    debugOutput("let's examine " << myState[0] << " " <<
         myState[1] << " "  << myState[2] << endl);
 
     if (losingState(myState))
     {
-        debugOutput(std::string(depth, ' ') << "losing state reached: " << myState[0] << " " <<
+        debugOutput("losing state reached: " << myState[0] << " " <<
             myState[1] << " "  << myState[2] << endl);
         return LOSE;
     }
@@ -72,31 +72,31 @@ enum Prediction findWinningMove(std::vector<int> myState, int & sticks, int & pi
     {
         for (int j = myState[i]; j > 0; j--) // try first to take a large amount of sticks. Depth first.
         {
-            debugOutput(std::string(depth, ' ') << "taking " << j << " sticks from pile " << i << endl);
+            debugOutput("taking " << j << " sticks from pile " << i << endl);
             myState[i] -= j;
             if (tookLast(myState))
             {
-                debugOutput(std::string(depth, ' ') << "took too many, let's try again" << endl);
+                debugOutput("took too many, let's try again" << endl);
                 myState[i] += j; // comon, at least leave a few
                 continue;
             }
 
-            depth += 10;
+            depth += 1;
             if (findWinningMove(myState, sticks, pile) == LOSE)
             {
                 pile = i;
                 sticks = j;
-                debugOutput(std::string(depth, ' ') << "Put your opponent in: " << myState[0] <<
+                debugOutput("Put your opponent in: " << myState[0] <<
                     " " << myState[1] << " "  << myState[2] << " to win " << endl);
-                depth -= 10;
+                depth -= 1;
                 return WIN;
             }
-            depth -= 10;
+            depth -= 1;
             myState[i] += j; // Not happy with the outcome, let's try another move
         }
     }
     // if you can't make it to the (0, 0, 1) state before your opponent you lose
-    debugOutput(std::string(depth, ' ') << "did not find a good move" << endl);
+    debugOutput("did not find a good move" << endl);
     return LOSE;
 }
 
