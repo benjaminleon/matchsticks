@@ -1,4 +1,4 @@
-#include "Brain.hpp"
+#include "brain.hpp"
 using std::cout;
 using std::endl;
 using std::cin;
@@ -23,8 +23,8 @@ int main()
             default: ordinal = "non-existing"; break;
         }
 
-        cout << "You're gonna win. take " << brain._sticks <<
-        " sticks from the " << ordinal << " pile" << endl;
+        cout << "You're gonna win. Take " << brain._sticks <<
+        " stick" << (brain._sticks > 1 ? "s" : "") <<  " from the " << ordinal << " pile" << endl;
     }
     else
     {
